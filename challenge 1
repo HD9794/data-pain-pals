@@ -1,0 +1,82 @@
+# -*- coding = utf-8 -*-
+# @Time : 2022/3/26 15:07
+# @Author : 华定
+# @File : challenge_1.py
+# @Software: PyCharm
+
+
+import pandas as pd
+
+#excel文件所在路径
+path=r'C:\编程+数据分析\data pain pals\monthly_data.xlsx'
+
+#####先处理sheet1
+df1=pd.read_excel(path,sheet_name="Sheet1",header=None)
+
+#设置起始和终点时间（手动的，笨方法）
+df1.iloc[4,0]='1948-01-31'
+df1.iloc[893,0]='2022-02-28'
+
+#把variable和它的起始+终止时间建成一个dataframe
+df_1a=pd.DataFrame({'Variable_name':df1.iloc[3,1:],'Start':df1.iloc[4,0],'End':df1.iloc[893,0]})
+print(df_1a)
+
+#把description，Unit和Scale建成一个dataframe
+df_1b=df1.iloc[:3,:4].T
+df_1b.set_axis(df_1b.iloc[0],axis=1,inplace=True)  #axis=1???????????
+df_1b=df_1b.drop(index=0)
+print(df_1b)
+
+#合并这两个dataframe，则sheet1的组合完成
+df1_final=pd.concat([df_1a,df_1b],axis=1)    #axis=1???????????
+
+
+
+
+
+#####处理sheet2，和上面相同的方法
+df2=pd.read_excel(path,sheet_name="Sheet2",header=None)
+
+df2.iloc[4,0]='1959-01-31'
+df2.iloc[761,0]='2022-02-28'
+
+
+df_2a=pd.DataFrame({'Variable_name':df2.iloc[3,1:],'Start':df2.iloc[4,0],'End':df2.iloc[761,0]})
+print(df_2a)
+df_2b=df2.iloc[:3,:4].T
+df_2b.set_axis(df_2b.iloc[0],axis=1,inplace=True)  #axis=1???????????
+df_2b=df_2b.drop(index=0)
+print(df_2b)
+df2_final=pd.concat([df_2a,df_2b],axis=1)    #axis=1???????????
+
+
+#######后面sheet的合并按照以上的方法弄好之后再concat到一起。。。。。。。
+
+
+
+
+
+
+''' 上面的方法比较笨，还有一种思路是先把所有的sheet合并之后再统一处理，下面的代码是先合并sheet数据然后存为新的excel，后面的还没搞 
+# 参数为None 代表读取所有sheet
+df = pd.read_excel(path,sheet_name=None)
+
+# 获取所有sheet名字
+# 如果read_excel参数不是None,则df.keys()为表头
+sheet_names = list(df.keys())
+# 创建空df用来连接
+df_concat = pd.DataFrame()
+# 循环每个df拼接成一个
+for sheet_name in sheet_names:
+    df_sheet = df[sheet_name]
+    df_concat = pd.concat([df_concat,df_sheet],axis=1)
+# 写入新的excel
+df_concat.to_excel('new_table.xlsx',index=False)
+
+
+df2=pd.read_excel(r'new_table.xlsx',header=None)
+'''
+
+
+
+
