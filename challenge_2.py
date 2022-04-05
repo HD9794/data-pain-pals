@@ -61,6 +61,9 @@ df_f['Year']=df_f['Year'].astype('str')  #？？我看了一下本来Year这一�
 df_f['Year']=pd.to_datetime(df_f['Year'],format='%Y-%m-%d')+ pd.offsets.YearEnd()
 
 
+#重新设索引
+df_f=df_f.reset_index()
+df_f.drop(columns='index',inplace=True)
 
 
 '''
